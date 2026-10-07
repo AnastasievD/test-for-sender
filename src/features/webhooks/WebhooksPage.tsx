@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActionIcon,
   Avatar,
@@ -32,20 +32,38 @@ export const WebhooksPage = () => {
   const [searchInput, setSearchInput] = useState(search);
   const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(null);
   const [debouncedSearch] = useDebouncedValue(searchInput, 300);
+  const searchChangeSource = useRef<'input' | 'url'>('url');
 
   useEffect(() => {
-    if (debouncedSearch.trim() !== search) setSearch(debouncedSearch);
-  }, [debouncedSearch, search, setSearch]);
-
-  useEffect(() => {
+    searchChangeSource.current = 'url';
     setSearchInput(search);
   }, [search]);
+
+  useEffect(() => {
+    if (
+      searchChangeSource.current === 'input' &&
+      debouncedSearch.trim() !== search
+    ) {
+      setSearch(debouncedSearch);
+    }
+  }, [debouncedSearch, search, setSearch]);
 
   const webhooksQuery = useQuery({
     queryKey: ['webhooks', { page, search }],
     queryFn: () => getWebhooks({ page, search }),
     placeholderData: keepPreviousData,
   });
+
+  useEffect(() => {
+    const currentPage = webhooksQuery.data?.paging.pages.current;
+    if (
+      currentPage !== undefined &&
+      !webhooksQuery.isPlaceholderData &&
+      currentPage !== page
+    ) {
+      setPage(currentPage, true);
+    }
+  }, [page, setPage, webhooksQuery.data, webhooksQuery.isPlaceholderData]);
 
   const initials = user
     ? `${user.first_name[0] ?? ''}${user.last_name[0] ?? ''}`
@@ -54,19 +72,30 @@ export const WebhooksPage = () => {
   return (
     <Box className="app-surface min-h-screen">
       <header className="sticky top-0 z-10 border-b border-slate-300/80 bg-white/90 backdrop-blur-xl">
-        <Container size="lg" className="flex min-h-16 items-center justify-between">
+        <Container
+          size="lg"
+          className="flex min-h-16 items-center justify-between"
+        >
           <Group gap="sm">
             <div className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-800 text-white shadow-lg">
               <IconWebhook size={21} stroke={1.8} />
             </div>
-            <Text fw={700} size="lg">{t('common.appName')}</Text>
+            <Text fw={700} size="lg">
+              {t('common.appName')}
+            </Text>
           </Group>
           <Group gap="sm">
             <Box className="hidden sm:block">
-              <Text size="sm" fw={600} ta="right">{user?.name}</Text>
-              <Text size="xs" c="dimmed">{user?.email}</Text>
+              <Text size="sm" fw={600} ta="right">
+                {user?.name}
+              </Text>
+              <Text size="xs" c="dimmed">
+                {user?.email}
+              </Text>
             </Box>
-            <Avatar color="blue" radius="xl">{initials}</Avatar>
+            <Avatar color="blue" radius="xl">
+              {initials}
+            </Avatar>
             <Tooltip label={t('actions.signOut')}>
               <ActionIcon
                 variant="subtle"
@@ -88,12 +117,19 @@ export const WebhooksPage = () => {
         className="pt-10 pb-16 sm:pt-14 lg:pt-16"
       >
         <Stack gap="xl">
-          <Group justify="space-between" align="flex-end" className="max-sm:items-start">
+          <Group
+            justify="space-between"
+            align="flex-end"
+            className="max-sm:items-start"
+          >
             <div>
               <Text className="text-xs font-bold tracking-widest" c="blue.7">
                 {t('webhooks.eyebrow')}
               </Text>
-              <Title order={1} className="mt-1 text-4xl tracking-tight sm:text-5xl">
+              <Title
+                order={1}
+                className="mt-1 text-4xl tracking-tight sm:text-5xl"
+              >
                 {t('webhooks.title')}
               </Title>
               <Text c="dimmed" mt={6}>
@@ -116,7 +152,10 @@ export const WebhooksPage = () => {
             className="w-full max-w-md"
             size="md"
             value={searchInput}
-            onChange={(event) => setSearchInput(event.currentTarget.value)}
+            onChange={(event) => {
+              searchChangeSource.current = 'input';
+              setSearchInput(event.currentTarget.value);
+            }}
             leftSection={<IconSearch size={18} />}
             placeholder={t('webhooks.searchPlaceholder')}
             aria-label={t('webhooks.searchPlaceholder')}
@@ -143,7 +182,7 @@ export const WebhooksPage = () => {
                 <Pagination
                   value={page}
                   total={webhooksQuery.data?.paging.pages.last ?? 1}
-                  onChange={setPage}
+                  onChange={(nextPage) => setPage(nextPage)}
                   withEdges
                 />
               </Group>

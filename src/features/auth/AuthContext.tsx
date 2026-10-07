@@ -8,7 +8,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   markSessionEnded,
   setSessionExpiredHandler,
@@ -28,6 +28,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null);
   const queryClient = useQueryClient();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const clearLocalSession = useCallback(() => {
@@ -39,18 +40,15 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     return setSessionExpiredHandler(() => {
       clearLocalSession();
-      navigate('/login', { replace: true });
+      navigate('/login', { replace: true, state: { from: location } });
     });
-  }, [clearLocalSession, navigate]);
+  }, [clearLocalSession, location, navigate]);
 
-  const login = useCallback(
-    async (credentials: LoginInput) => {
-      const nextUser = await loginRequest(credentials);
-      setUser(nextUser);
-      return nextUser;
-    },
-    [],
-  );
+  const login = useCallback(async (credentials: LoginInput) => {
+    const nextUser = await loginRequest(credentials);
+    setUser(nextUser);
+    return nextUser;
+  }, []);
 
   const logout = useCallback(async () => {
     try {

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 const parsePage = (value: string | null) => {
@@ -8,14 +8,22 @@ const parsePage = (value: string | null) => {
 
 export const useWebhookSearchParams = () => {
   const [params, setParams] = useSearchParams();
-  const page = parsePage(params.get('page'));
+  const rawPage = params.get('page');
+  const page = parsePage(rawPage);
   const search = params.get('search') ?? '';
 
+  useEffect(() => {
+    if (rawPage === null || rawPage === String(page)) return;
+    const next = new URLSearchParams(params);
+    next.set('page', String(page));
+    setParams(next, { replace: true });
+  }, [page, params, rawPage, setParams]);
+
   const setPage = useCallback(
-    (nextPage: number) => {
+    (nextPage: number, replace = false) => {
       const next = new URLSearchParams(params);
       next.set('page', String(Math.max(1, nextPage)));
-      setParams(next);
+      setParams(next, { replace });
     },
     [params, setParams],
   );
