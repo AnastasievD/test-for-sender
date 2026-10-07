@@ -6,7 +6,7 @@ interface ErrorStateProps {
 }
 
 export const ErrorState = ({ onRetry }: ErrorStateProps) => (
-  <Paper className="state-card" withBorder radius="lg">
+  <Paper className="grid min-h-76 place-items-center border-[#dfe5ef] p-8" withBorder radius="lg">
     <Stack align="center" gap="sm">
       <IconAlertTriangle size={30} stroke={1.7} color="var(--mantine-color-red-6)" />
       <Title order={3}>Webhooks could not be loaded</Title>

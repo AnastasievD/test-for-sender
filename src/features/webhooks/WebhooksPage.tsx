@@ -50,15 +50,17 @@ export const WebhooksPage = () => {
     : '';
 
   return (
-    <Box className="app-surface">
-      <header className="app-header">
-        <Container size="lg" className="header-inner">
+    <Box className="app-surface min-h-screen">
+      <header className="sticky top-0 z-10 border-b border-slate-300/80 bg-white/90 backdrop-blur-xl">
+        <Container size="lg" className="flex min-h-16 items-center justify-between sm:min-h-[4.5rem]">
           <Group gap="sm">
-            <div className="app-logo"><IconWebhook size={21} stroke={1.8} /></div>
+            <div className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-800 text-white shadow-[0_0.45rem_1.1rem_rgba(28,126,214,0.22)]">
+              <IconWebhook size={21} stroke={1.8} />
+            </div>
             <Text fw={750} size="lg">Smart Sender</Text>
           </Group>
           <Group gap="sm">
-            <Box className="user-copy">
+            <Box className="hidden sm:block">
               <Text size="sm" fw={600} ta="right">{user?.name}</Text>
               <Text size="xs" c="dimmed">{user?.email}</Text>
             </Box>
@@ -78,23 +80,36 @@ export const WebhooksPage = () => {
         </Container>
       </header>
 
-      <Container component="main" size="lg" className="page-content">
+      <Container
+        component="main"
+        size="lg"
+        className="pt-[clamp(2.3rem,5vw,4.3rem)] pb-16"
+      >
         <Stack gap="xl">
-          <Group justify="space-between" align="flex-end" className="page-heading">
+          <Group justify="space-between" align="flex-end" className="max-sm:items-start">
             <div>
-              <Text className="eyebrow" c="blue.7">DELIVERY CONFIGURATION</Text>
-              <Title order={1}>Webhooks</Title>
+              <Text className="text-xs font-bold tracking-[0.16em]" c="blue.7">
+                DELIVERY CONFIGURATION
+              </Text>
+              <Title order={1} className="mt-1 text-[clamp(2rem,4vw,3rem)] tracking-[-0.04em]">
+                Webhooks
+              </Title>
               <Text c="dimmed" mt={6}>
                 Monitor and maintain the endpoints connected to your workspace.
               </Text>
             </div>
-            <Button variant="light" leftSection={<IconWebhook size={17} />} disabled>
+            <Button
+              className="max-sm:hidden"
+              variant="light"
+              leftSection={<IconWebhook size={17} />}
+              disabled
+            >
               {webhooksQuery.data?.paging.results.total ?? '—'} endpoints
             </Button>
           </Group>
 
           <TextInput
-            className="webhook-search"
+            className="w-full max-w-[29rem]"
             size="md"
             value={searchInput}
             onChange={(event) => setSearchInput(event.currentTarget.value)}
@@ -115,8 +130,8 @@ export const WebhooksPage = () => {
 
           {!webhooksQuery.isError &&
             (webhooksQuery.data?.paging.pages.last ?? 1) > 1 && (
-              <Group justify="space-between" className="pagination-row">
-                <Text size="sm" c="dimmed">
+              <Group justify="space-between" className="max-sm:justify-center">
+                <Text className="max-sm:hidden" size="sm" c="dimmed">
                   {webhooksQuery.data?.paging.results.total ?? 0} results
                 </Text>
                 <Pagination

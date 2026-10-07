@@ -33,7 +33,7 @@ const LoadingRows = () =>
 export const WebhooksTable = ({ webhooks, loading, onEdit }: WebhooksTableProps) => {
   if (!loading && webhooks.length === 0) {
     return (
-      <Paper className="state-card" withBorder radius="lg">
+      <Paper className="grid min-h-76 place-items-center border-[#dfe5ef] p-8" withBorder radius="lg">
         <Stack align="center" gap="sm">
           <ThemeIcon variant="light" size={46} radius="xl">
             <IconWebhook size={24} />
@@ -48,15 +48,21 @@ export const WebhooksTable = ({ webhooks, loading, onEdit }: WebhooksTableProps)
   }
 
   return (
-    <Paper className="table-card" withBorder radius="lg">
-      <Box className="table-scroll">
+    <Paper
+      className="overflow-hidden border-[#dfe5ef] shadow-[0_0.8rem_2.6rem_rgba(28,48,85,0.055)]"
+      withBorder
+      radius="lg"
+    >
+      <Box className="overflow-x-auto">
         <Table verticalSpacing="md" horizontalSpacing="lg" highlightOnHover>
-          <Table.Thead>
+          <Table.Thead className="bg-slate-50 text-slate-500">
             <Table.Tr>
-              <Table.Th>Name</Table.Th>
-              <Table.Th className="url-column">Endpoint URL</Table.Th>
-              <Table.Th>Status</Table.Th>
-              <Table.Th aria-label="Actions" />
+              <Table.Th className="text-xs font-bold tracking-[0.08em] uppercase">Name</Table.Th>
+              <Table.Th className="hidden text-xs font-bold tracking-[0.08em] uppercase sm:table-cell">
+                Endpoint URL
+              </Table.Th>
+              <Table.Th className="text-xs font-bold tracking-[0.08em] uppercase">Status</Table.Th>
+              <Table.Th className="text-xs font-bold tracking-[0.08em] uppercase" aria-label="Actions" />
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -67,11 +73,16 @@ export const WebhooksTable = ({ webhooks, loading, onEdit }: WebhooksTableProps)
                 <Table.Tr key={webhook.id}>
                   <Table.Td>
                     <Text fw={600}>{webhook.name}</Text>
-                    <Text className="mobile-url" c="dimmed" size="sm" truncate>
+                    <Text
+                      className="mt-1 block max-w-64 font-mono sm:hidden"
+                      c="dimmed"
+                      size="sm"
+                      truncate
+                    >
                       {webhook.url}
                     </Text>
                   </Table.Td>
-                  <Table.Td className="url-column">
+                  <Table.Td className="hidden sm:table-cell">
                     <Text ff="monospace" size="sm" c="dimmed">{webhook.url}</Text>
                   </Table.Td>
                   <Table.Td>

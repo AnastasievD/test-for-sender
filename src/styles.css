@@ -1,3 +1,8 @@
+@layer theme, base, mantine, components, utilities;
+@import 'tailwindcss';
+@import '@mantine/core/styles.layer.css';
+@import '@mantine/notifications/styles.layer.css';
+
 :root {
   color: #172033;
   background: #f4f7fb;
@@ -22,140 +27,12 @@ body {
     #f6f8fc;
 }
 
-.app-header {
-  position: sticky;
-  z-index: 10;
-  top: 0;
-  border-bottom: 1px solid rgba(207, 216, 231, 0.85);
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(18px);
-}
-
-.header-inner {
-  min-height: 4.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.app-logo {
-  display: grid;
-  place-items: center;
-  width: 2.35rem;
-  height: 2.35rem;
-  border-radius: 0.65rem;
-  color: white;
-  background: linear-gradient(145deg, #1c7ed6, #1553a3);
-  box-shadow: 0 0.45rem 1.1rem rgba(28, 126, 214, 0.22);
-}
-
-.page-content {
-  padding-top: clamp(2.3rem, 5vw, 4.3rem);
-  padding-bottom: 4rem;
-}
-
-.page-heading h1 {
-  margin-top: 0.3rem;
-  font-size: clamp(2rem, 4vw, 3rem);
-  letter-spacing: -0.04em;
-}
-
-.webhook-search {
-  width: min(100%, 29rem);
-}
-
-.table-card {
-  overflow: hidden;
-  border-color: #dfe5ef;
-  box-shadow: 0 0.8rem 2.6rem rgba(28, 48, 85, 0.055);
-}
-
-.table-scroll {
-  overflow-x: auto;
-}
-
-.table-card thead {
-  color: #667085;
-  background: #f8fafc;
-}
-
-.table-card th {
-  border-bottom-color: #dfe5ef;
-  font-size: 0.72rem;
-  font-weight: 750;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.state-card {
-  min-height: 19rem;
-  display: grid;
-  place-items: center;
-  padding: 2rem;
-  border-color: #dfe5ef;
-}
-
-.mobile-url {
-  display: none;
-  max-width: 16rem;
-  margin-top: 0.2rem;
-  font-family: monospace;
-}
-
-@media (max-width: 640px) {
-  .header-inner {
-    min-height: 4rem;
-  }
-
-  .user-copy {
-    display: none;
-  }
-
-  .page-heading {
-    align-items: flex-start;
-  }
-
-  .page-heading > button {
-    display: none;
-  }
-
-  .url-column {
-    display: none;
-  }
-
-  .mobile-url {
-    display: block;
-  }
-
-  .pagination-row {
-    justify-content: center;
-  }
-
-  .pagination-row > p {
-    display: none;
-  }
-}
-
 button,
 input {
   font: inherit;
 }
 
-.login-layout {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: minmax(340px, 0.9fr) minmax(480px, 1.1fr);
-  background: #f4f7fb;
-}
-
 .login-brand {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
-  padding: clamp(2rem, 5vw, 5rem);
-  color: white;
   background:
     radial-gradient(circle at 85% 12%, rgba(65, 148, 255, 0.5), transparent 26rem),
     linear-gradient(145deg, #081a3a 0%, #0d3774 58%, #0b54b5 100%);
@@ -171,87 +48,4 @@ input {
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 50%;
   box-shadow: 0 0 0 5rem rgba(255, 255, 255, 0.035), 0 0 0 10rem rgba(255, 255, 255, 0.025);
-}
-
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 3rem;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 0.8rem;
-  background: rgba(255, 255, 255, 0.12);
-  font-size: 0.9rem;
-  font-weight: 750;
-  letter-spacing: 0.08em;
-  backdrop-filter: blur(12px);
-}
-
-.login-brand h1 {
-  max-width: 10ch;
-  margin: 0.7rem 0 1.3rem;
-  color: white;
-  font-size: clamp(2.4rem, 4.4vw, 4.6rem);
-  line-height: 1.03;
-  letter-spacing: -0.045em;
-}
-
-.eyebrow {
-  font-size: 0.72rem;
-  font-weight: 750;
-  letter-spacing: 0.16em;
-}
-
-.brand-copy {
-  max-width: 35rem;
-  color: rgba(255, 255, 255, 0.74);
-  font-size: 1.05rem;
-  line-height: 1.7;
-}
-
-.brand-footnote {
-  position: relative;
-  z-index: 1;
-  color: rgba(255, 255, 255, 0.58);
-  font-size: 0.85rem;
-}
-
-.login-panel {
-  display: grid;
-  place-items: center;
-  padding: 2rem;
-}
-
-.login-card {
-  width: min(100%, 29rem);
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  border: 1px solid #e3e8f0;
-  box-shadow: 0 1.5rem 4rem rgba(24, 43, 77, 0.09);
-}
-
-@media (max-width: 760px) {
-  .login-layout {
-    display: block;
-  }
-
-  .login-brand {
-    min-height: 15rem;
-    gap: 2.5rem;
-    padding: 1.5rem;
-  }
-
-  .login-brand h1 {
-    max-width: 14ch;
-    font-size: 2.2rem;
-  }
-
-  .brand-copy,
-  .brand-footnote {
-    display: none;
-  }
-
-  .login-panel {
-    padding: 1rem;
-    transform: translateY(-1.25rem);
-  }
 }
