@@ -4,20 +4,29 @@ A small webhook management application built with React, TypeScript and Mantine.
 
 ## Run locally
 
-Requirements: Node.js 20.19+, 22.12+ or 24+ and npm.
+Node.js 24 and npm are recommended. The supported Node.js range is `^20.19.0 || ^22.12.0 || >=24.0.0`. No environment variables or external backend are required.
 
 ```bash
-npm install
+git clone https://github.com/AnastasievD/test-for-sender.git
+cd test-for-sender
+npm ci
 npm run dev
 ```
 
-Open the URL printed by Vite. Other useful commands:
+Open the URL printed by Vite. Useful checks:
 
 ```bash
-npm test
 npm run check
-npm run test:e2e
+npm run typecheck
+npm test
 npm run build
+```
+
+To run the browser tests, install Chromium once and start the suite. Playwright starts the development server automatically:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
 ```
 
 ## Test credentials
@@ -48,11 +57,7 @@ The login form is prefilled with these values for easier review.
 
 The Vitest integration tests verify concurrent session recovery and ensure malformed API responses are rejected by their runtime Zod contracts.
 
-The Playwright E2E test covers the primary browser journey: sign-in, URL-backed search, Zod validation, webhook editing and sign-out. Install its Chromium runtime once with:
-
-```bash
-npx playwright install chromium
-```
+The Playwright E2E suite covers the primary browser journey, URL-backed browser navigation and invalid page normalization.
 
 ## Known limitations
 
