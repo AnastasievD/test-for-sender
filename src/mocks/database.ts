@@ -1,4 +1,8 @@
-import type { Webhook, WebhookList, WebhookUpdate } from '../features/webhooks/types';
+import type {
+  Webhook,
+  WebhookList,
+  WebhookUpdate,
+} from '../features/webhooks/schema';
 import { TEST_CREDENTIALS } from '../shared/config/constants';
 
 export const mockUser = {

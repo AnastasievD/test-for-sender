@@ -1,4 +1,4 @@
-import { ApiError, type ApiErrorBody } from './errors';
+import { ApiError } from './errors';
 
 let csrfToken: string | null = null;
 let csrfPromise: Promise<string> | null = null;
@@ -9,7 +9,7 @@ const requestCsrfToken = async () => {
   });
 
   if (!response.ok) {
-    const body = (await response.json().catch(() => null)) as ApiErrorBody | null;
+    const body: unknown = await response.json().catch(() => null);
     throw new ApiError(response.status, body);
   }
 

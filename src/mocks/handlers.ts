@@ -1,5 +1,11 @@
 import { delay, http, HttpResponse, type HttpResponseResolver } from 'msw';
-import type { WebhookUpdate } from '../features/webhooks/types';
+import type { ApiErrorType } from '../api/errors';
+import {
+  issueSessionSchema,
+  loginRequestSchema,
+  sessionFingerprintSchema,
+} from '../features/auth/schema';
+import { webhookUpdateSchema } from '../features/webhooks/schema';
 import {
   findWebhook,
   listWebhooks,
@@ -17,16 +23,9 @@ import {
   rotateSession,
 } from './session';
 
-type ErrorType =
-  | 'BadRequestException'
-  | 'AuthenticationException'
-  | 'NotFoundException'
-  | 'TokenMismatchException'
-  | 'ValidationException';
-
 const apiError = (
   status: number,
-  type: ErrorType,
+  type: ApiErrorType,
   message: string,
   payload?: Record<string, string[]>,
 ) =>
@@ -58,16 +57,17 @@ const withSession = (resolver: HttpResponseResolver): HttpResponseResolver =>
     return resolver(info);
   };
 
-const isFingerprint = (value: unknown): value is string =>
-  typeof value === 'string' && /^[a-f0-9]{32}$/.test(value);
+const readJson = (request: Request): Promise<unknown> =>
+  request.json().catch(() => null);
 
-const isHttpUrl = (value: string) => {
-  try {
-    const url = new URL(value);
-    return url.protocol === 'http:' || url.protocol === 'https:';
-  } catch {
-    return false;
+const fieldErrors = (issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>) => {
+  const payload: Record<string, string[]> = {};
+  for (const issue of issues) {
+    const field = issue.path[0];
+    if (typeof field !== 'string') continue;
+    (payload[field] ??= []).push(issue.message);
   }
+  return payload;
 };
 
 export const handlers = [
@@ -90,17 +90,23 @@ export const handlers = [
       return apiError(400, 'BadRequestException', 'Captcha token is required.');
     }
 
-    const body = (await request.json()) as Record<string, unknown>;
+    const parsed = loginRequestSchema.safeParse(await readJson(request));
+    if (!parsed.success) {
+      return apiError(
+        422,
+        'ValidationException',
+        'The given data was invalid.',
+        fieldErrors(parsed.error.issues),
+      );
+    }
+
     const payload: Record<string, string[]> = {};
 
-    if (body.email !== TEST_CREDENTIALS.email) {
+    if (parsed.data.email !== TEST_CREDENTIALS.email) {
       payload.email = ['The selected email is invalid.'];
     }
-    if (body.password !== TEST_CREDENTIALS.password) {
+    if (parsed.data.password !== TEST_CREDENTIALS.password) {
       payload.password = ['The password is incorrect.'];
-    }
-    if (!isFingerprint(body.fingerprint)) {
-      payload.fingerprint = ['The fingerprint must contain 32 hex characters.'];
     }
 
     if (Object.keys(payload).length > 0) {
@@ -120,11 +126,11 @@ export const handlers = [
     if (headerError) return headerError;
     const tokenError = csrfError(request);
     if (tokenError) return tokenError;
-    const body = (await request.json()) as Record<string, unknown>;
+    const parsed = issueSessionSchema.safeParse(await readJson(request));
 
     if (
-      body.device_session_token !== DEVICE_SESSION_TOKEN ||
-      !isFingerprint(body.fingerprint)
+      !parsed.success ||
+      parsed.data.device_session_token !== DEVICE_SESSION_TOKEN
     ) {
       return apiError(
         422,
@@ -142,9 +148,9 @@ export const handlers = [
     if (headerError) return headerError;
     const tokenError = csrfError(request);
     if (tokenError) return tokenError;
-    const body = (await request.json()) as Record<string, unknown>;
+    const parsed = sessionFingerprintSchema.safeParse(await readJson(request));
 
-    if (!isFingerprint(body.fingerprint) || !rotateSession()) {
+    if (!parsed.success || !rotateSession()) {
       return apiError(400, 'BadRequestException', 'Session cannot be rotated.');
     }
 
@@ -159,6 +165,10 @@ export const handlers = [
     if (headerError) return headerError;
     const tokenError = csrfError(request);
     if (tokenError) return tokenError;
+    const parsed = sessionFingerprintSchema.safeParse(await readJson(request));
+    if (!parsed.success) {
+      return apiError(400, 'BadRequestException', 'Invalid fingerprint.');
+    }
     revokeSession();
     return new HttpResponse(null, { status: 204 });
   }),
@@ -194,27 +204,17 @@ export const handlers = [
     withSession(async ({ request, params }) => {
       const tokenError = csrfError(request);
       if (tokenError) return tokenError;
-      const body = (await request.json()) as Partial<WebhookUpdate>;
-      const payload: Record<string, string[]> = {};
-
-      if (!body.name?.trim()) payload.name = ['The name field is required.'];
-      if (!body.url || !isHttpUrl(body.url)) {
-        payload.url = ['The url must be a valid HTTP/HTTPS URL.'];
-      }
-
-      if (Object.keys(payload).length > 0) {
+      const parsed = webhookUpdateSchema.safeParse(await readJson(request));
+      if (!parsed.success) {
         return apiError(
           422,
           'ValidationException',
           'The given data was invalid.',
-          payload,
+          fieldErrors(parsed.error.issues),
         );
       }
 
-      const updated = updateWebhook(Number(params.id), {
-        name: body.name!.trim(),
-        url: body.url!,
-      });
+      const updated = updateWebhook(Number(params.id), parsed.data);
 
       return updated
         ? HttpResponse.json(updated)

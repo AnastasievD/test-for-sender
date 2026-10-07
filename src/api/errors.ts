@@ -1,22 +1,36 @@
-export interface ApiErrorBody {
-  error?: {
-    type?: string;
-    message?: string;
-    payload?: Record<string, string[]>;
-  };
-}
+import { z } from 'zod';
+
+export const apiErrorTypeSchema = z.enum([
+  'BadRequestException',
+  'AuthenticationException',
+  'NotFoundException',
+  'TokenMismatchException',
+  'ValidationException',
+]);
+
+const apiErrorBodySchema = z.object({
+  error: z.object({
+    type: apiErrorTypeSchema,
+    message: z.string(),
+    payload: z.record(z.string(), z.array(z.string())).optional(),
+  }),
+});
+
+export type ApiErrorType = z.infer<typeof apiErrorTypeSchema>;
 
 export class ApiError extends Error {
   readonly status: number;
   readonly type: string | undefined;
   readonly payload: Record<string, string[]> | undefined;
 
-  constructor(status: number, body: ApiErrorBody | null) {
-    super(body?.error?.message ?? `Request failed with status ${status}`);
+  constructor(status: number, body: unknown) {
+    const parsed = apiErrorBodySchema.safeParse(body);
+    const apiError = parsed.success ? parsed.data.error : undefined;
+    super(apiError?.message ?? `Request failed with status ${status}`);
     this.name = 'ApiError';
     this.status = status;
-    this.type = body?.error?.type;
-    this.payload = body?.error?.payload;
+    this.type = apiError?.type;
+    this.payload = apiError?.payload;
   }
 }
 

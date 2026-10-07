@@ -22,7 +22,7 @@ import { getWebhooks } from './api';
 import { WebhookEditModal } from './components/WebhookEditModal';
 import { WebhooksTable } from './components/WebhooksTable';
 import { useWebhookSearchParams } from './hooks/useWebhookSearchParams';
-import type { Webhook } from './types';
+import type { Webhook } from './schema';
 
 export const WebhooksPage = () => {
   const { user, logout } = useAuth();

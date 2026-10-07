@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconEdit, IconWebhook } from '@tabler/icons-react';
-import type { Webhook } from '../types';
+import type { Webhook } from '../schema';
 
 interface WebhooksTableProps {
   webhooks: Webhook[];

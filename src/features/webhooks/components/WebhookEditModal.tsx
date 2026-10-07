@@ -6,8 +6,11 @@ import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isApiError } from '../../../api/errors';
 import { updateWebhook } from '../api';
-import { webhookSchema, type WebhookFormValues } from '../schema';
-import type { Webhook } from '../types';
+import {
+  webhookUpdateSchema,
+  type Webhook,
+  type WebhookUpdate,
+} from '../schema';
 
 interface WebhookEditModalProps {
   webhook: Webhook | null;
@@ -23,8 +26,8 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
     setError,
     clearErrors,
     formState: { errors, isDirty, isSubmitting },
-  } = useForm<WebhookFormValues>({
-    resolver: zodResolver(webhookSchema),
+  } = useForm<WebhookUpdate>({
+    resolver: zodResolver(webhookUpdateSchema),
     defaultValues: { name: '', url: '' },
   });
 
@@ -35,7 +38,7 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
   }, [clearErrors, reset, webhook]);
 
   const mutation = useMutation({
-    mutationFn: (values: WebhookFormValues) => {
+    mutationFn: (values: WebhookUpdate) => {
       if (!webhook) throw new Error('No webhook selected.');
       return updateWebhook(webhook.id, values);
     },

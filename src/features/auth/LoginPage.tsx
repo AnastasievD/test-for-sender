@@ -15,7 +15,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { isApiError } from '../../api/errors';
 import { TEST_CREDENTIALS } from '../../shared/config/constants';
 import { useAuth } from './AuthContext';
-import { loginSchema, type LoginFormValues } from './schema';
+import { loginInputSchema, type LoginInput } from './schema';
 
 interface LocationState {
   from?: { pathname: string; search?: string };
@@ -31,24 +31,25 @@ export const LoginPage = () => {
     setError,
     clearErrors,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginInputSchema),
     defaultValues: {
       email: TEST_CREDENTIALS.email,
       password: TEST_CREDENTIALS.password,
     },
   });
 
-  if (user) return <Navigate to="/webhooks" replace />;
+  const state = location.state as LocationState | null;
+  const destination = state?.from
+    ? `${state.from.pathname}${state.from.search ?? ''}`
+    : '/webhooks';
+
+  if (user) return <Navigate to={destination} replace />;
 
   const onSubmit = handleSubmit(async (values) => {
     clearErrors('root');
     try {
       await login(values);
-      const state = location.state as LocationState | null;
-      const destination = state?.from
-        ? `${state.from.pathname}${state.from.search ?? ''}`
-        : '/webhooks';
       navigate(destination, { replace: true });
     } catch (error) {
       if (isApiError(error) && error.payload) {

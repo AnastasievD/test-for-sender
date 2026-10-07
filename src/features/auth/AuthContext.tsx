@@ -10,16 +10,16 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import {
-  markSessionEstablished,
+  markSessionEnded,
   setSessionExpiredHandler,
 } from '../../api/authRecovery';
 import { resetCsrfToken } from '../../api/csrf';
 import { login as loginRequest, revoke } from './api';
-import type { LoginCredentials, User } from './types';
+import type { LoginInput, User } from './schema';
 
 interface AuthContextValue {
   user: User | null;
-  login: (credentials: LoginCredentials) => Promise<User>;
+  login: (credentials: LoginInput) => Promise<User>;
   logout: () => Promise<void>;
 }
 
@@ -37,20 +37,19 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   }, [queryClient]);
 
   useEffect(() => {
-    setSessionExpiredHandler(() => {
+    return setSessionExpiredHandler(() => {
       clearLocalSession();
       navigate('/login', { replace: true });
     });
   }, [clearLocalSession, navigate]);
 
   const login = useCallback(
-    async (credentials: LoginCredentials) => {
+    async (credentials: LoginInput) => {
       const nextUser = await loginRequest(credentials);
       setUser(nextUser);
-      queryClient.setQueryData(['me'], nextUser);
       return nextUser;
     },
-    [queryClient],
+    [],
   );
 
   const logout = useCallback(async () => {
@@ -58,7 +57,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       await revoke();
     } finally {
       clearLocalSession();
-      markSessionEstablished();
+      markSessionEnded();
       navigate('/login', { replace: true });
     }
   }, [clearLocalSession, navigate]);

@@ -32,12 +32,20 @@ export const notifySessionExpired = () => {
 
 export const setSessionExpiredHandler = (handler: SessionExpiredHandler) => {
   sessionExpiredHandler = handler;
+  return () => {
+    if (sessionExpiredHandler === handler) {
+      sessionExpiredHandler = () => undefined;
+    }
+  };
 };
 
-export const markSessionEstablished = () => {
+const advanceSessionGeneration = () => {
   sessionGeneration += 1;
   sessionExpiredPromise = null;
 };
+
+export const markSessionEstablished = advanceSessionGeneration;
+export const markSessionEnded = advanceSessionGeneration;
 
 export const resetAuthRecovery = () => {
   rotatePromise = null;
