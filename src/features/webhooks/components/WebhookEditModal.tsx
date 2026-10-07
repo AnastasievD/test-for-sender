@@ -1,53 +1,50 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button, Group, Modal, Stack, Text, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { notifications } from '@mantine/notifications';
+import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isApiError } from '../../../api/errors';
 import { updateWebhook } from '../api';
-import type { Webhook, WebhookUpdate } from '../types';
+import { webhookSchema, type WebhookFormValues } from '../schema';
+import type { Webhook } from '../types';
 
 interface WebhookEditModalProps {
   webhook: Webhook | null;
   onClose: () => void;
 }
 
-const isHttpUrl = (value: string) => {
-  try {
-    const url = new URL(value);
-    return url.protocol === 'http:' || url.protocol === 'https:';
-  } catch {
-    return false;
-  }
-};
-
 export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) => {
   const queryClient = useQueryClient();
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const form = useForm<WebhookUpdate>({
-    initialValues: { name: '', url: '' },
-    validate: {
-      name: (value) => (value.trim() ? null : 'Name is required'),
-      url: (value) => (isHttpUrl(value) ? null : 'Enter a valid HTTP/HTTPS URL'),
-    },
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    clearErrors,
+    formState: { errors, isDirty, isSubmitting },
+  } = useForm<WebhookFormValues>({
+    resolver: zodResolver(webhookSchema),
+    defaultValues: { name: '', url: '' },
   });
 
   useEffect(() => {
     if (!webhook) return;
-    form.setValues({ name: webhook.name, url: webhook.url });
-    form.resetDirty({ name: webhook.name, url: webhook.url });
-    form.clearErrors();
-    setSubmitError(null);
-    // The form object is stable; the selected webhook is the reset boundary.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [webhook]);
+    reset({ name: webhook.name, url: webhook.url });
+    clearErrors();
+  }, [clearErrors, reset, webhook]);
 
   const mutation = useMutation({
-    mutationFn: (values: WebhookUpdate) => {
+    mutationFn: (values: WebhookFormValues) => {
       if (!webhook) throw new Error('No webhook selected.');
       return updateWebhook(webhook.id, values);
     },
-    onSuccess: async (updated) => {
+  });
+
+  const onSubmit = handleSubmit(async (values) => {
+    clearErrors('root');
+    try {
+      const updated = await mutation.mutateAsync(values);
       await queryClient.invalidateQueries({ queryKey: ['webhooks'] });
       notifications.show({
         color: 'teal',
@@ -55,21 +52,23 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
         message: `${updated.name} is ready to receive events.`,
       });
       onClose();
-    },
-    onError: (error) => {
+    } catch (error) {
       if (isApiError(error) && error.payload) {
         for (const [field, messages] of Object.entries(error.payload)) {
-          form.setFieldError(field, messages[0] ?? 'Invalid value');
+          if (field === 'name' || field === 'url') {
+            setError(field, {
+              type: 'server',
+              message: messages[0] ?? 'Invalid value',
+            });
+          }
         }
         return;
       }
-      setSubmitError(error instanceof Error ? error.message : 'Unable to update webhook');
-    },
-  });
-
-  const handleSubmit = form.onSubmit((values) => {
-    setSubmitError(null);
-    mutation.mutate({ name: values.name.trim(), url: values.url.trim() });
+      setError('root.server', {
+        type: 'server',
+        message: error instanceof Error ? error.message : 'Unable to update webhook',
+      });
+    }
   });
 
   return (
@@ -81,7 +80,7 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
       radius="lg"
       overlayProps={{ backgroundOpacity: 0.35, blur: 3 }}
     >
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={onSubmit} noValidate>
         <Stack gap="md">
           <Text size="sm" c="dimmed">
             Update the label or destination used for this integration.
@@ -90,21 +89,25 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
             label="Name"
             placeholder="Payment received"
             autoFocus
-            {...form.getInputProps('name')}
+            error={errors.name?.message}
+            {...register('name')}
           />
           <TextInput
             label="Endpoint URL"
             placeholder="https://api.example.com/webhooks"
-            {...form.getInputProps('url')}
+            error={errors.url?.message}
+            {...register('url')}
           />
-          {submitError && (
-            <Text c="red.7" size="sm" role="alert">{submitError}</Text>
+          {errors.root?.server?.message && (
+            <Text c="red.7" size="sm" role="alert">
+              {errors.root.server.message}
+            </Text>
           )}
           <Group justify="flex-end" mt="sm">
-            <Button variant="default" onClick={onClose} disabled={mutation.isPending}>
+            <Button variant="default" onClick={onClose} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" loading={mutation.isPending} disabled={!form.isDirty()}>
+            <Button type="submit" loading={isSubmitting} disabled={!isDirty}>
               Save changes
             </Button>
           </Group>
