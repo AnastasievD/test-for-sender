@@ -15,6 +15,127 @@ body {
   min-height: 100vh;
 }
 
+.app-surface {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(225, 237, 255, 0.5), transparent 18rem),
+    #f6f8fc;
+}
+
+.app-header {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  border-bottom: 1px solid rgba(207, 216, 231, 0.85);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px);
+}
+
+.header-inner {
+  min-height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-logo {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0.65rem;
+  color: white;
+  background: linear-gradient(145deg, #1c7ed6, #1553a3);
+  box-shadow: 0 0.45rem 1.1rem rgba(28, 126, 214, 0.22);
+}
+
+.page-content {
+  padding-top: clamp(2.3rem, 5vw, 4.3rem);
+  padding-bottom: 4rem;
+}
+
+.page-heading h1 {
+  margin-top: 0.3rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.04em;
+}
+
+.webhook-search {
+  width: min(100%, 29rem);
+}
+
+.table-card {
+  overflow: hidden;
+  border-color: #dfe5ef;
+  box-shadow: 0 0.8rem 2.6rem rgba(28, 48, 85, 0.055);
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.table-card thead {
+  color: #667085;
+  background: #f8fafc;
+}
+
+.table-card th {
+  border-bottom-color: #dfe5ef;
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.state-card {
+  min-height: 19rem;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  border-color: #dfe5ef;
+}
+
+.mobile-url {
+  display: none;
+  max-width: 16rem;
+  margin-top: 0.2rem;
+  font-family: monospace;
+}
+
+@media (max-width: 640px) {
+  .header-inner {
+    min-height: 4rem;
+  }
+
+  .user-copy {
+    display: none;
+  }
+
+  .page-heading {
+    align-items: flex-start;
+  }
+
+  .page-heading > button {
+    display: none;
+  }
+
+  .url-column {
+    display: none;
+  }
+
+  .mobile-url {
+    display: block;
+  }
+
+  .pagination-row {
+    justify-content: center;
+  }
+
+  .pagination-row > p {
+    display: none;
+  }
+}
+
 button,
 input {
   font: inherit;
