@@ -1,7 +1,7 @@
 import { markSessionEstablished } from '../../api/authRecovery';
 import { apiRequest } from '../../api/client';
 import { getFingerprint } from '../../shared/lib/fingerprint';
-import { deviceSessionSchema, userSchema, type LoginInput } from './schema';
+import { deviceSessionSchema, type LoginInput, userSchema } from './schema';
 
 export const login = async ({ email, password }: LoginInput) => {
   const fingerprint = getFingerprint();

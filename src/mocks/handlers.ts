@@ -1,4 +1,4 @@
-import { delay, http, HttpResponse, type HttpResponseResolver } from 'msw';
+import { delay, HttpResponse, type HttpResponseResolver, http } from 'msw';
 import type { ApiErrorType } from '../api/errors';
 import {
   issueSessionSchema,
@@ -7,8 +7,8 @@ import {
 } from '../features/auth/schema';
 import { webhookUpdateSchema } from '../features/webhooks/schema';
 import { i18n } from '../i18n';
-import { findWebhook, listWebhooks, mockUser, updateWebhook } from './database';
 import { TEST_CREDENTIALS } from '../shared/config/constants';
+import { findWebhook, listWebhooks, mockUser, updateWebhook } from './database';
 import {
   CSRF_TOKEN,
   DEVICE_SESSION_TOKEN,
@@ -72,7 +72,9 @@ const fieldErrors = (
   for (const issue of issues) {
     const field = issue.path[0];
     if (typeof field !== 'string') continue;
-    (payload[field] ??= []).push(issue.message);
+    const messages = payload[field] ?? [];
+    messages.push(issue.message);
+    payload[field] = messages;
   }
   return payload;
 };

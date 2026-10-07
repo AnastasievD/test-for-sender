@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
 import { Center, Loader } from '@mantine/core';
+import { lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthGuard } from '../features/auth/AuthGuard';

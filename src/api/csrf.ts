@@ -1,5 +1,5 @@
-import { ApiError } from './errors';
 import { i18n } from '../i18n';
+import { ApiError } from './errors';
 
 let csrfToken: string | null = null;
 let csrfPromise: Promise<string> | null = null;

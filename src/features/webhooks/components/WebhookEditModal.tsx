@@ -1,16 +1,16 @@
-import { useEffect } from 'react';
-import { Button, Group, Modal, Stack, Text, TextInput } from '@mantine/core';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Group, Modal, Stack, Text, TextInput } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isApiError } from '../../../api/errors';
 import { updateWebhook } from '../api';
 import {
-  webhookUpdateSchema,
   type Webhook,
   type WebhookUpdate,
+  webhookUpdateSchema,
 } from '../schema';
 
 interface WebhookEditModalProps {

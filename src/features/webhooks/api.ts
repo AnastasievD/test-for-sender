@@ -1,5 +1,5 @@
 import { apiRequest } from '../../api/client';
-import { webhookListSchema, webhookSchema, type WebhookUpdate } from './schema';
+import { type WebhookUpdate, webhookListSchema, webhookSchema } from './schema';
 
 export interface WebhookListParams {
   page: number;

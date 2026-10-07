@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Anchor,
   Box,
@@ -9,14 +10,13 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { isApiError } from '../../api/errors';
 import { TEST_CREDENTIALS } from '../../shared/config/constants';
 import { useAuth } from './AuthContext';
-import { loginInputSchema, type LoginInput } from './schema';
+import { type LoginInput, loginInputSchema } from './schema';
 
 interface LocationState {
   from?: { pathname: string; search?: string };

@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import {
   ActionIcon,
   Avatar,
@@ -14,11 +13,12 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { IconLogout, IconSearch, IconWebhook } from '@tabler/icons-react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../auth/AuthContext';
 import { ErrorState } from '../../shared/ui/ErrorState';
+import { useAuth } from '../auth/AuthContext';
 import { getWebhooks } from './api';
 import { WebhookEditModal } from './components/WebhookEditModal';
 import { WebhooksTable } from './components/WebhooksTable';

@@ -1,7 +1,7 @@
-import type { PropsWithChildren } from 'react';
-import { MantineProvider, createTheme } from '@mantine/core';
+import { createTheme, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { QueryClientProvider } from '@tanstack/react-query';
+import type { PropsWithChildren } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '../../features/auth/AuthContext';
 import { queryClient } from './queryClient';

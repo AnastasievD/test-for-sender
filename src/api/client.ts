@@ -1,12 +1,12 @@
+import type { z } from 'zod';
+import { getFingerprint } from '../shared/lib/fingerprint';
 import {
   getSessionGeneration,
   notifySessionExpired,
   recoverSession,
 } from './authRecovery';
-import type { z } from 'zod';
 import { getCsrfToken } from './csrf';
 import { ApiError } from './errors';
-import { getFingerprint } from '../shared/lib/fingerprint';
 
 interface ApiRequestOptions<T> extends Omit<RequestInit, 'body'> {
   body?: unknown;

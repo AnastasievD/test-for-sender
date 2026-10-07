@@ -21,9 +21,11 @@ interface WebhooksTableProps {
   onEdit: (webhook: Webhook) => void;
 }
 
+const loadingRowIds = ['one', 'two', 'three', 'four', 'five', 'six'] as const;
+
 const LoadingRows = () =>
-  Array.from({ length: 6 }, (_, index) => (
-    <Table.Tr key={index}>
+  loadingRowIds.map((rowId, index) => (
+    <Table.Tr key={rowId}>
       <Table.Td>
         <Skeleton height={18} width={`${55 + index * 4}%`} />
       </Table.Td>

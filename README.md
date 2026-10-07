@@ -15,8 +15,7 @@ Open the URL printed by Vite. Other useful commands:
 
 ```bash
 npm test
-npm run lint
-npm run format:check
+npm run check
 npm run test:e2e
 npm run build
 ```
