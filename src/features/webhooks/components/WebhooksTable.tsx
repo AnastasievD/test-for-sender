@@ -24,19 +24,35 @@ interface WebhooksTableProps {
 const LoadingRows = () =>
   Array.from({ length: 6 }, (_, index) => (
     <Table.Tr key={index}>
-      <Table.Td><Skeleton height={18} width={`${55 + index * 4}%`} /></Table.Td>
-      <Table.Td className="hidden sm:table-cell"><Skeleton height={18} width="82%" /></Table.Td>
-      <Table.Td><Skeleton height={24} width={68} radius="xl" /></Table.Td>
-      <Table.Td><Skeleton height={28} width={28} radius="md" /></Table.Td>
+      <Table.Td>
+        <Skeleton height={18} width={`${55 + index * 4}%`} />
+      </Table.Td>
+      <Table.Td className="hidden sm:table-cell">
+        <Skeleton height={18} width="82%" />
+      </Table.Td>
+      <Table.Td>
+        <Skeleton height={24} width={68} radius="xl" />
+      </Table.Td>
+      <Table.Td>
+        <Skeleton height={28} width={28} radius="md" />
+      </Table.Td>
     </Table.Tr>
   ));
 
-export const WebhooksTable = ({ webhooks, loading, onEdit }: WebhooksTableProps) => {
+export const WebhooksTable = ({
+  webhooks,
+  loading,
+  onEdit,
+}: WebhooksTableProps) => {
   const { t } = useTranslation();
 
   if (!loading && webhooks.length === 0) {
     return (
-      <Paper className="grid min-h-72 place-items-center border-slate-200 p-8" withBorder radius="lg">
+      <Paper
+        className="grid min-h-72 place-items-center border-slate-200 p-8"
+        withBorder
+        radius="lg"
+      >
         <Stack align="center" gap="sm">
           <ThemeIcon variant="light" size={46} radius="xl">
             <IconWebhook size={24} />
@@ -93,7 +109,9 @@ export const WebhooksTable = ({ webhooks, loading, onEdit }: WebhooksTableProps)
                     </Text>
                   </Table.Td>
                   <Table.Td className="hidden sm:table-cell">
-                    <Text ff="monospace" size="sm" c="dimmed">{webhook.url}</Text>
+                    <Text ff="monospace" size="sm" c="dimmed">
+                      {webhook.url}
+                    </Text>
                   </Table.Td>
                   <Table.Td>
                     <Badge
@@ -107,11 +125,15 @@ export const WebhooksTable = ({ webhooks, loading, onEdit }: WebhooksTableProps)
                     </Badge>
                   </Table.Td>
                   <Table.Td>
-                    <Tooltip label={t('actions.editWebhook', { name: webhook.name })}>
+                    <Tooltip
+                      label={t('actions.editWebhook', { name: webhook.name })}
+                    >
                       <ActionIcon
                         variant="subtle"
                         color="gray"
-                        aria-label={t('actions.editWebhook', { name: webhook.name })}
+                        aria-label={t('actions.editWebhook', {
+                          name: webhook.name,
+                        })}
                         onClick={() => onEdit(webhook)}
                       >
                         <IconEdit size={17} />

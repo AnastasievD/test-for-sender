@@ -6,7 +6,7 @@ import { App } from './app/App';
 
 const enableMocking = async () => {
   const { worker } = await import('./mocks/browser');
-  await worker.start({ onUnhandledFrame: 'bypass' });
+  await worker.start({ onUnhandledRequest: 'bypass' });
 };
 
 void enableMocking().then(() => {

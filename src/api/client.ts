@@ -24,9 +24,7 @@ const parseBody = async <T>(
   responseSchema?: z.ZodType<T>,
 ): Promise<T> => {
   if (response.status === 204) {
-    return responseSchema
-      ? responseSchema.parse(undefined)
-      : (undefined as T);
+    return responseSchema ? responseSchema.parse(undefined) : (undefined as T);
   }
   if (!responseSchema) return undefined as T;
   const body: unknown = await response.json();
@@ -45,7 +43,8 @@ const executeRequest = async <T>(
   if (method === 'POST' || method === 'PUT') {
     headers.set('X-CSRF-TOKEN', csrfToken);
   }
-  if (options.body !== undefined) headers.set('Content-Type', 'application/json');
+  if (options.body !== undefined)
+    headers.set('Content-Type', 'application/json');
 
   const observedGeneration = getSessionGeneration();
   const {
@@ -60,7 +59,10 @@ const executeRequest = async <T>(
     headers,
     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
   };
-  const response = await fetch(new URL(path, window.location.origin), requestInit);
+  const response = await fetch(
+    new URL(path, window.location.origin),
+    requestInit,
+  );
 
   if (response.status === 419 && !options.csrfRetryAttempted) {
     await getCsrfToken(true);
@@ -68,11 +70,7 @@ const executeRequest = async <T>(
   }
 
   const shouldRecover = options.authRecovery !== false;
-  if (
-    response.status === 401 &&
-    shouldRecover &&
-    !options.authRetryAttempted
-  ) {
+  if (response.status === 401 && shouldRecover && !options.authRetryAttempted) {
     try {
       await recoverSession(observedGeneration, () =>
         executeRequest<void>('/auth/token/rotate', {

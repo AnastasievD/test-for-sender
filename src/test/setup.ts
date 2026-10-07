@@ -6,7 +6,7 @@ import { resetDatabase } from '../mocks/database';
 import { server } from '../mocks/server';
 import { resetSession } from '../mocks/session';
 
-beforeAll(() => server.listen({ onUnhandledFrame: 'error' }));
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 
 afterEach(() => {
   server.resetHandlers();

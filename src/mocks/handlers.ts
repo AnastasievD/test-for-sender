@@ -7,12 +7,7 @@ import {
 } from '../features/auth/schema';
 import { webhookUpdateSchema } from '../features/webhooks/schema';
 import { i18n } from '../i18n';
-import {
-  findWebhook,
-  listWebhooks,
-  mockUser,
-  updateWebhook,
-} from './database';
+import { findWebhook, listWebhooks, mockUser, updateWebhook } from './database';
 import { TEST_CREDENTIALS } from '../shared/config/constants';
 import {
   CSRF_TOKEN,
@@ -37,7 +32,11 @@ const apiError = (
 
 const requestedWithError = (request: Request) =>
   request.headers.get('X-Requested-With') !== 'XMLHttpRequest'
-    ? apiError(400, 'BadRequestException', i18n.t('mockApi.missingRequestedWith'))
+    ? apiError(
+        400,
+        'BadRequestException',
+        i18n.t('mockApi.missingRequestedWith'),
+      )
     : null;
 
 const csrfError = (request: Request) =>
@@ -47,10 +46,15 @@ const csrfError = (request: Request) =>
 
 const unauthorized = () => {
   recordUnauthorized();
-  return apiError(401, 'AuthenticationException', i18n.t('mockApi.unauthenticated'));
+  return apiError(
+    401,
+    'AuthenticationException',
+    i18n.t('mockApi.unauthenticated'),
+  );
 };
 
-const withSession = (resolver: HttpResponseResolver): HttpResponseResolver =>
+const withSession =
+  (resolver: HttpResponseResolver): HttpResponseResolver =>
   async (info) => {
     const headerError = requestedWithError(info.request);
     if (headerError) return headerError;
@@ -61,7 +65,9 @@ const withSession = (resolver: HttpResponseResolver): HttpResponseResolver =>
 const readJson = (request: Request): Promise<unknown> =>
   request.json().catch(() => null);
 
-const fieldErrors = (issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>) => {
+const fieldErrors = (
+  issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>,
+) => {
   const payload: Record<string, string[]> = {};
   for (const issue of issues) {
     const field = issue.path[0];
@@ -88,7 +94,11 @@ export const handlers = [
     const tokenError = csrfError(request);
     if (tokenError) return tokenError;
     if (!request.headers.get('X-Captcha-Token')) {
-      return apiError(400, 'BadRequestException', i18n.t('mockApi.captchaRequired'));
+      return apiError(
+        400,
+        'BadRequestException',
+        i18n.t('mockApi.captchaRequired'),
+      );
     }
 
     const parsed = loginRequestSchema.safeParse(await readJson(request));
@@ -152,7 +162,11 @@ export const handlers = [
     const parsed = sessionFingerprintSchema.safeParse(await readJson(request));
 
     if (!parsed.success || !rotateSession()) {
-      return apiError(400, 'BadRequestException', i18n.t('mockApi.sessionCannotRotate'));
+      return apiError(
+        400,
+        'BadRequestException',
+        i18n.t('mockApi.sessionCannotRotate'),
+      );
     }
 
     // Keep concurrent expired requests in flight long enough to exercise
@@ -168,7 +182,11 @@ export const handlers = [
     if (tokenError) return tokenError;
     const parsed = sessionFingerprintSchema.safeParse(await readJson(request));
     if (!parsed.success) {
-      return apiError(400, 'BadRequestException', i18n.t('mockApi.invalidFingerprint'));
+      return apiError(
+        400,
+        'BadRequestException',
+        i18n.t('mockApi.invalidFingerprint'),
+      );
     }
     revokeSession();
     return new HttpResponse(null, { status: 204 });

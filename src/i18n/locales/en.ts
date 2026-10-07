@@ -24,7 +24,8 @@ export const en = {
     mark: 'SS',
     brandName: 'SMART SENDER',
     headline: 'Reliable delivery starts with visibility.',
-    description: 'Review endpoints, verify their status and keep every integration current.',
+    description:
+      'Review endpoints, verify their status and keep every integration current.',
     consoleName: 'Webhook operations console',
     eyebrow: 'WELCOME BACK',
     title: 'Sign in to your workspace',
@@ -38,7 +39,8 @@ export const en = {
   webhooks: {
     eyebrow: 'DELIVERY CONFIGURATION',
     title: 'Webhooks',
-    description: 'Monitor and maintain the endpoints connected to your workspace.',
+    description:
+      'Monitor and maintain the endpoints connected to your workspace.',
     endpointCount_one: '{{count}} endpoint',
     endpointCount_other: '{{count}} endpoints',
     resultCount_one: '{{count}} result',

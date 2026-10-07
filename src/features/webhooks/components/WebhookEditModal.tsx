@@ -18,7 +18,10 @@ interface WebhookEditModalProps {
   onClose: () => void;
 }
 
-export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) => {
+export const WebhookEditModal = ({
+  webhook,
+  onClose,
+}: WebhookEditModalProps) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const {
@@ -72,7 +75,9 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
       setError('root.server', {
         type: 'server',
         message:
-          error instanceof Error ? error.message : t('errors.updateWebhookFailed'),
+          error instanceof Error
+            ? error.message
+            : t('errors.updateWebhookFailed'),
       });
     }
   });

@@ -66,7 +66,8 @@ export const LoginPage = () => {
       } else {
         setError('root.server', {
           type: 'server',
-          message: error instanceof Error ? error.message : t('errors.signInFailed'),
+          message:
+            error instanceof Error ? error.message : t('errors.signInFailed'),
         });
       }
     }
@@ -112,7 +113,9 @@ export const LoginPage = () => {
                 {t('login.eyebrow')}
               </Text>
               <Title order={2}>{t('login.title')}</Title>
-              <Text c="dimmed" mt={8}>{t('login.subtitle')}</Text>
+              <Text c="dimmed" mt={8}>
+                {t('login.subtitle')}
+              </Text>
             </div>
 
             <form onSubmit={onSubmit} noValidate>
@@ -137,7 +140,12 @@ export const LoginPage = () => {
                     {errors.root.server.message}
                   </Text>
                 )}
-                <Button type="submit" size="md" loading={isSubmitting} fullWidth>
+                <Button
+                  type="submit"
+                  size="md"
+                  loading={isSubmitting}
+                  fullWidth
+                >
                   {t('actions.signIn')}
                 </Button>
               </Stack>

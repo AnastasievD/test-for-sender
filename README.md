@@ -4,7 +4,7 @@ A small webhook management application built with React, TypeScript and Mantine.
 
 ## Run locally
 
-Requirements: Node.js 20 or newer and npm.
+Requirements: Node.js 20.19+, 22.12+ or 24+ and npm.
 
 ```bash
 npm install
@@ -15,6 +15,8 @@ Open the URL printed by Vite. Other useful commands:
 
 ```bash
 npm test
+npm run lint
+npm run format:check
 npm run test:e2e
 npm run build
 ```

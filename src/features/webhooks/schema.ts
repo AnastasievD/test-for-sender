@@ -12,10 +12,7 @@ const isHttpUrl = (value: string) => {
 
 export const webhookUpdateSchema = z.object({
   name: z.string().trim().min(1, i18n.t('validation.nameRequired')),
-  url: z
-    .string()
-    .trim()
-    .refine(isHttpUrl, i18n.t('validation.httpUrl')),
+  url: z.string().trim().refine(isHttpUrl, i18n.t('validation.httpUrl')),
 });
 
 export const webhookSchema = webhookUpdateSchema.extend({
