@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom/vitest';
 import { afterAll, afterEach, beforeAll } from 'vitest';
 import { resetAuthRecovery } from '../api/authRecovery';
 import { resetCsrfToken } from '../api/csrf';
