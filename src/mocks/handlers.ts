@@ -12,6 +12,7 @@ import {
   DEVICE_SESSION_TOKEN,
   hasActiveSession,
   issueSession,
+  recordUnauthorized,
   revokeSession,
   rotateSession,
 } from './session';
@@ -44,8 +45,10 @@ const csrfError = (request: Request) =>
     ? apiError(419, 'TokenMismatchException', 'CSRF token mismatch.')
     : null;
 
-const unauthorized = () =>
-  apiError(401, 'AuthenticationException', 'Unauthenticated.');
+const unauthorized = () => {
+  recordUnauthorized();
+  return apiError(401, 'AuthenticationException', 'Unauthenticated.');
+};
 
 const withSession = (resolver: HttpResponseResolver): HttpResponseResolver =>
   async (info) => {

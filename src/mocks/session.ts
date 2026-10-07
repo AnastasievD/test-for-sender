@@ -5,6 +5,7 @@ export const SESSION_DURATION_MS = 30_000;
 let issued = false;
 let expiresAt = 0;
 let rotateCount = 0;
+let unauthorizedCount = 0;
 
 export const issueSession = () => {
   issued = true;
@@ -29,6 +30,7 @@ export const resetSession = () => {
   issued = false;
   expiresAt = 0;
   rotateCount = 0;
+  unauthorizedCount = 0;
 };
 
 export const expireSession = () => {
@@ -36,3 +38,9 @@ export const expireSession = () => {
 };
 
 export const getRotateCount = () => rotateCount;
+
+export const recordUnauthorized = () => {
+  unauthorizedCount += 1;
+};
+
+export const getUnauthorizedCount = () => unauthorizedCount;
