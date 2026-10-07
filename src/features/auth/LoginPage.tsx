@@ -73,25 +73,25 @@ export const LoginPage = () => {
   });
 
   return (
-    <main className="min-h-screen bg-[#f4f7fb] md:grid md:grid-cols-[minmax(340px,0.9fr)_minmax(480px,1.1fr)]">
+    <main className="min-h-screen bg-slate-50 md:grid md:grid-cols-2">
       <section
-        className="login-brand relative flex min-h-60 flex-col justify-between gap-10 overflow-hidden p-6 text-white md:min-h-screen md:p-[clamp(2rem,5vw,5rem)]"
+        className="login-brand relative flex min-h-60 flex-col justify-between gap-10 overflow-hidden p-6 text-white md:min-h-screen md:p-12 xl:p-20"
         aria-label={t('login.introductionLabel')}
       >
-        <div className="grid size-12 place-items-center rounded-[0.8rem] border border-white/50 bg-white/10 text-sm font-bold tracking-[0.08em] backdrop-blur-xl">
+        <div className="grid size-12 place-items-center rounded-xl border border-white/50 bg-white/10 text-sm font-bold tracking-wider backdrop-blur-xl">
           {t('login.mark')}
         </div>
         <div>
-          <Text className="text-xs font-bold tracking-[0.16em]">
+          <Text className="text-xs font-bold tracking-widest">
             {t('login.brandName')}
           </Text>
           <Title
             order={1}
-            className="my-3 max-w-[14ch] text-[2.2rem] leading-[1.03] tracking-[-0.045em] text-white md:max-w-[10ch] md:text-[clamp(2.4rem,4.4vw,4.6rem)]"
+            className="my-3 max-w-md text-4xl leading-tight tracking-tight text-white md:text-6xl xl:max-w-xl xl:text-7xl"
           >
             {t('login.headline')}
           </Title>
-          <Text className="hidden max-w-xl text-[1.05rem] leading-7 text-white/75 md:block">
+          <Text className="hidden max-w-xl text-lg leading-7 text-white/75 md:block">
             {t('login.description')}
           </Text>
         </div>
@@ -103,12 +103,12 @@ export const LoginPage = () => {
       <Box className="grid -translate-y-5 place-items-center p-4 md:translate-y-0 md:p-8">
         <Paper
           component="section"
-          className="w-full max-w-[29rem] border border-[#e3e8f0] p-[clamp(1.5rem,4vw,2.5rem)] shadow-[0_1.5rem_4rem_rgba(24,43,77,0.09)]"
+          className="w-full max-w-md border border-slate-200 p-6 shadow-xl sm:p-10"
           radius="lg"
         >
           <Stack gap="xl">
             <div>
-              <Text className="text-xs font-bold tracking-[0.16em]" c="blue.7">
+              <Text className="text-xs font-bold tracking-widest" c="blue.7">
                 {t('login.eyebrow')}
               </Text>
               <Title order={2}>{t('login.title')}</Title>

@@ -36,7 +36,7 @@ export const WebhooksTable = ({ webhooks, loading, onEdit }: WebhooksTableProps)
 
   if (!loading && webhooks.length === 0) {
     return (
-      <Paper className="grid min-h-76 place-items-center border-[#dfe5ef] p-8" withBorder radius="lg">
+      <Paper className="grid min-h-72 place-items-center border-slate-200 p-8" withBorder radius="lg">
         <Stack align="center" gap="sm">
           <ThemeIcon variant="light" size={46} radius="xl">
             <IconWebhook size={24} />
@@ -52,7 +52,7 @@ export const WebhooksTable = ({ webhooks, loading, onEdit }: WebhooksTableProps)
 
   return (
     <Paper
-      className="overflow-hidden border-[#dfe5ef] shadow-[0_0.8rem_2.6rem_rgba(28,48,85,0.055)]"
+      className="overflow-hidden border-slate-200 shadow-sm"
       withBorder
       radius="lg"
     >
@@ -60,17 +60,17 @@ export const WebhooksTable = ({ webhooks, loading, onEdit }: WebhooksTableProps)
         <Table verticalSpacing="md" horizontalSpacing="lg" highlightOnHover>
           <Table.Thead className="bg-slate-50 text-slate-500">
             <Table.Tr>
-              <Table.Th className="text-xs font-bold tracking-[0.08em] uppercase">
+              <Table.Th className="text-xs font-bold tracking-wide uppercase">
                 {t('webhooks.table.name')}
               </Table.Th>
-              <Table.Th className="hidden text-xs font-bold tracking-[0.08em] uppercase sm:table-cell">
+              <Table.Th className="hidden text-xs font-bold tracking-wide uppercase sm:table-cell">
                 {t('webhooks.table.endpointUrl')}
               </Table.Th>
-              <Table.Th className="text-xs font-bold tracking-[0.08em] uppercase">
+              <Table.Th className="text-xs font-bold tracking-wide uppercase">
                 {t('webhooks.table.status')}
               </Table.Th>
               <Table.Th
-                className="text-xs font-bold tracking-[0.08em] uppercase"
+                className="text-xs font-bold tracking-wide uppercase"
                 aria-label={t('a11y.tableActions')}
               />
             </Table.Tr>

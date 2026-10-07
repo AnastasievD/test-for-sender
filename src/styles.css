@@ -21,9 +21,8 @@ body {
 }
 
 .app-surface {
-  min-height: 100vh;
   background:
-    linear-gradient(180deg, rgba(225, 237, 255, 0.5), transparent 18rem),
+    linear-gradient(180deg, rgba(225, 237, 255, 0.5), transparent 300px),
     #f6f8fc;
 }
 
@@ -34,18 +33,18 @@ input {
 
 .login-brand {
   background:
-    radial-gradient(circle at 85% 12%, rgba(65, 148, 255, 0.5), transparent 26rem),
+    radial-gradient(circle at 85% 12%, rgba(65, 148, 255, 0.5), transparent 400px),
     linear-gradient(145deg, #081a3a 0%, #0d3774 58%, #0b54b5 100%);
 }
 
 .login-brand::after {
   content: '';
   position: absolute;
-  width: 28rem;
-  height: 28rem;
-  right: -14rem;
-  bottom: -13rem;
+  width: 420px;
+  height: 420px;
+  right: -200px;
+  bottom: -200px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 50%;
-  box-shadow: 0 0 0 5rem rgba(255, 255, 255, 0.035), 0 0 0 10rem rgba(255, 255, 255, 0.025);
+  box-shadow: 0 0 0 80px rgba(255, 255, 255, 0.035), 0 0 0 160px rgba(255, 255, 255, 0.025);
 }

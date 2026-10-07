@@ -54,12 +54,12 @@ export const WebhooksPage = () => {
   return (
     <Box className="app-surface min-h-screen">
       <header className="sticky top-0 z-10 border-b border-slate-300/80 bg-white/90 backdrop-blur-xl">
-        <Container size="lg" className="flex min-h-16 items-center justify-between sm:min-h-[4.5rem]">
+        <Container size="lg" className="flex min-h-16 items-center justify-between">
           <Group gap="sm">
-            <div className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-800 text-white shadow-[0_0.45rem_1.1rem_rgba(28,126,214,0.22)]">
+            <div className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-800 text-white shadow-lg">
               <IconWebhook size={21} stroke={1.8} />
             </div>
-            <Text fw={750} size="lg">{t('common.appName')}</Text>
+            <Text fw={700} size="lg">{t('common.appName')}</Text>
           </Group>
           <Group gap="sm">
             <Box className="hidden sm:block">
@@ -85,15 +85,15 @@ export const WebhooksPage = () => {
       <Container
         component="main"
         size="lg"
-        className="pt-[clamp(2.3rem,5vw,4.3rem)] pb-16"
+        className="pt-10 pb-16 sm:pt-14 lg:pt-16"
       >
         <Stack gap="xl">
           <Group justify="space-between" align="flex-end" className="max-sm:items-start">
             <div>
-              <Text className="text-xs font-bold tracking-[0.16em]" c="blue.7">
+              <Text className="text-xs font-bold tracking-widest" c="blue.7">
                 {t('webhooks.eyebrow')}
               </Text>
-              <Title order={1} className="mt-1 text-[clamp(2rem,4vw,3rem)] tracking-[-0.04em]">
+              <Title order={1} className="mt-1 text-4xl tracking-tight sm:text-5xl">
                 {t('webhooks.title')}
               </Title>
               <Text c="dimmed" mt={6}>
@@ -113,7 +113,7 @@ export const WebhooksPage = () => {
           </Group>
 
           <TextInput
-            className="w-full max-w-[29rem]"
+            className="w-full max-w-md"
             size="md"
             value={searchInput}
             onChange={(event) => setSearchInput(event.currentTarget.value)}
