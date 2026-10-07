@@ -1,0 +1,36 @@
+import { ApiError, type ApiErrorBody } from './errors';
+
+let csrfToken: string | null = null;
+let csrfPromise: Promise<string> | null = null;
+
+const requestCsrfToken = async () => {
+  const response = await fetch('/csrf', {
+    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+  });
+
+  if (!response.ok) {
+    const body = (await response.json().catch(() => null)) as ApiErrorBody | null;
+    throw new ApiError(response.status, body);
+  }
+
+  const token = response.headers.get('X-CSRF-TOKEN');
+  if (!token) throw new Error('CSRF response did not include X-CSRF-TOKEN.');
+  csrfToken = token;
+  return token;
+};
+
+export const getCsrfToken = (forceRefresh = false) => {
+  if (forceRefresh) csrfToken = null;
+  if (csrfToken) return Promise.resolve(csrfToken);
+
+  csrfPromise ??= requestCsrfToken().finally(() => {
+    csrfPromise = null;
+  });
+
+  return csrfPromise;
+};
+
+export const resetCsrfToken = () => {
+  csrfToken = null;
+  csrfPromise = null;
+};
