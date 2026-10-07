@@ -4,7 +4,7 @@ let csrfToken: string | null = null;
 let csrfPromise: Promise<string> | null = null;
 
 const requestCsrfToken = async () => {
-  const response = await fetch('/csrf', {
+  const response = await fetch(new URL('/csrf', window.location.origin), {
     headers: { 'X-Requested-With': 'XMLHttpRequest' },
   });
 

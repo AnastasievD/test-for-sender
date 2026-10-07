@@ -49,7 +49,7 @@ const executeRequest = async <T>(
     headers,
     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
   };
-  const response = await fetch(path, requestInit);
+  const response = await fetch(new URL(path, window.location.origin), requestInit);
 
   if (response.status === 419 && !options.csrfRetryAttempted) {
     await getCsrfToken(true);
