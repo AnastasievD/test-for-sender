@@ -1,12 +1,13 @@
 import { z } from 'zod';
+import { i18n } from '../../i18n';
 
 export const fingerprintSchema = z
   .string()
-  .regex(/^[a-f0-9]{32}$/, 'The fingerprint must contain 32 hex characters.');
+  .regex(/^[a-f0-9]{32}$/, i18n.t('validation.fingerprint'));
 
 export const loginInputSchema = z.object({
-  email: z.string().trim().email('Enter a valid email'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.string().trim().email(i18n.t('validation.email')),
+  password: z.string().min(1, i18n.t('validation.passwordRequired')),
 });
 
 export const loginRequestSchema = loginInputSchema.extend({

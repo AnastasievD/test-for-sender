@@ -3,6 +3,7 @@ import { Button, Group, Modal, Stack, Text, TextInput } from '@mantine/core';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { notifications } from '@mantine/notifications';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isApiError } from '../../../api/errors';
 import { updateWebhook } from '../api';
@@ -18,6 +19,7 @@ interface WebhookEditModalProps {
 }
 
 export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const {
     register,
@@ -39,7 +41,7 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
 
   const mutation = useMutation({
     mutationFn: (values: WebhookUpdate) => {
-      if (!webhook) throw new Error('No webhook selected.');
+      if (!webhook) throw new Error(t('errors.updateWebhookFailed'));
       return updateWebhook(webhook.id, values);
     },
   });
@@ -51,8 +53,8 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
       await queryClient.invalidateQueries({ queryKey: ['webhooks'] });
       notifications.show({
         color: 'teal',
-        title: 'Webhook updated',
-        message: `${updated.name} is ready to receive events.`,
+        title: t('webhooks.edit.successTitle'),
+        message: t('webhooks.edit.successMessage', { name: updated.name }),
       });
       onClose();
     } catch (error) {
@@ -61,7 +63,7 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
           if (field === 'name' || field === 'url') {
             setError(field, {
               type: 'server',
-              message: messages[0] ?? 'Invalid value',
+              message: messages[0] ?? t('common.invalidValue'),
             });
           }
         }
@@ -69,7 +71,8 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
       }
       setError('root.server', {
         type: 'server',
-        message: error instanceof Error ? error.message : 'Unable to update webhook',
+        message:
+          error instanceof Error ? error.message : t('errors.updateWebhookFailed'),
       });
     }
   });
@@ -78,7 +81,7 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
     <Modal
       opened={Boolean(webhook)}
       onClose={onClose}
-      title="Edit webhook"
+      title={t('webhooks.edit.title')}
       centered
       radius="lg"
       overlayProps={{ backgroundOpacity: 0.35, blur: 3 }}
@@ -86,18 +89,18 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
       <form onSubmit={onSubmit} noValidate>
         <Stack gap="md">
           <Text size="sm" c="dimmed">
-            Update the label or destination used for this integration.
+            {t('webhooks.edit.description')}
           </Text>
           <TextInput
-            label="Name"
-            placeholder="Payment received"
+            label={t('webhooks.edit.nameLabel')}
+            placeholder={t('webhooks.edit.namePlaceholder')}
             autoFocus
             error={errors.name?.message}
             {...register('name')}
           />
           <TextInput
-            label="Endpoint URL"
-            placeholder="https://api.example.com/webhooks"
+            label={t('webhooks.edit.urlLabel')}
+            placeholder={t('webhooks.edit.urlPlaceholder')}
             error={errors.url?.message}
             {...register('url')}
           />
@@ -108,10 +111,10 @@ export const WebhookEditModal = ({ webhook, onClose }: WebhookEditModalProps) =>
           )}
           <Group justify="flex-end" mt="sm">
             <Button variant="default" onClick={onClose} disabled={isSubmitting}>
-              Cancel
+              {t('actions.cancel')}
             </Button>
             <Button type="submit" loading={isSubmitting} disabled={!isDirty}>
-              Save changes
+              {t('actions.saveChanges')}
             </Button>
           </Group>
         </Stack>

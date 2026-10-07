@@ -6,6 +6,7 @@ import {
   sessionFingerprintSchema,
 } from '../features/auth/schema';
 import { webhookUpdateSchema } from '../features/webhooks/schema';
+import { i18n } from '../i18n';
 import {
   findWebhook,
   listWebhooks,
@@ -36,17 +37,17 @@ const apiError = (
 
 const requestedWithError = (request: Request) =>
   request.headers.get('X-Requested-With') !== 'XMLHttpRequest'
-    ? apiError(400, 'BadRequestException', 'Missing requested-with header.')
+    ? apiError(400, 'BadRequestException', i18n.t('mockApi.missingRequestedWith'))
     : null;
 
 const csrfError = (request: Request) =>
   request.headers.get('X-CSRF-TOKEN') !== CSRF_TOKEN
-    ? apiError(419, 'TokenMismatchException', 'CSRF token mismatch.')
+    ? apiError(419, 'TokenMismatchException', i18n.t('mockApi.csrfMismatch'))
     : null;
 
 const unauthorized = () => {
   recordUnauthorized();
-  return apiError(401, 'AuthenticationException', 'Unauthenticated.');
+  return apiError(401, 'AuthenticationException', i18n.t('mockApi.unauthenticated'));
 };
 
 const withSession = (resolver: HttpResponseResolver): HttpResponseResolver =>
@@ -87,7 +88,7 @@ export const handlers = [
     const tokenError = csrfError(request);
     if (tokenError) return tokenError;
     if (!request.headers.get('X-Captcha-Token')) {
-      return apiError(400, 'BadRequestException', 'Captcha token is required.');
+      return apiError(400, 'BadRequestException', i18n.t('mockApi.captchaRequired'));
     }
 
     const parsed = loginRequestSchema.safeParse(await readJson(request));
@@ -95,7 +96,7 @@ export const handlers = [
       return apiError(
         422,
         'ValidationException',
-        'The given data was invalid.',
+        i18n.t('mockApi.invalidData'),
         fieldErrors(parsed.error.issues),
       );
     }
@@ -103,17 +104,17 @@ export const handlers = [
     const payload: Record<string, string[]> = {};
 
     if (parsed.data.email !== TEST_CREDENTIALS.email) {
-      payload.email = ['The selected email is invalid.'];
+      payload.email = [i18n.t('mockApi.selectedEmailInvalid')];
     }
     if (parsed.data.password !== TEST_CREDENTIALS.password) {
-      payload.password = ['The password is incorrect.'];
+      payload.password = [i18n.t('mockApi.passwordIncorrect')];
     }
 
     if (Object.keys(payload).length > 0) {
       return apiError(
         422,
         'ValidationException',
-        'The given data was invalid.',
+        i18n.t('mockApi.invalidData'),
         payload,
       );
     }
@@ -135,7 +136,7 @@ export const handlers = [
       return apiError(
         422,
         'ValidationException',
-        'The given data was invalid.',
+        i18n.t('mockApi.invalidData'),
       );
     }
 
@@ -151,7 +152,7 @@ export const handlers = [
     const parsed = sessionFingerprintSchema.safeParse(await readJson(request));
 
     if (!parsed.success || !rotateSession()) {
-      return apiError(400, 'BadRequestException', 'Session cannot be rotated.');
+      return apiError(400, 'BadRequestException', i18n.t('mockApi.sessionCannotRotate'));
     }
 
     // Keep concurrent expired requests in flight long enough to exercise
@@ -167,7 +168,7 @@ export const handlers = [
     if (tokenError) return tokenError;
     const parsed = sessionFingerprintSchema.safeParse(await readJson(request));
     if (!parsed.success) {
-      return apiError(400, 'BadRequestException', 'Invalid fingerprint.');
+      return apiError(400, 'BadRequestException', i18n.t('mockApi.invalidFingerprint'));
     }
     revokeSession();
     return new HttpResponse(null, { status: 204 });
@@ -195,7 +196,7 @@ export const handlers = [
       const webhook = findWebhook(Number(params.id));
       return webhook
         ? HttpResponse.json(webhook)
-        : apiError(404, 'NotFoundException', 'Webhook not found.');
+        : apiError(404, 'NotFoundException', i18n.t('mockApi.webhookNotFound'));
     }),
   ),
 
@@ -209,7 +210,7 @@ export const handlers = [
         return apiError(
           422,
           'ValidationException',
-          'The given data was invalid.',
+          i18n.t('mockApi.invalidData'),
           fieldErrors(parsed.error.issues),
         );
       }
@@ -218,7 +219,7 @@ export const handlers = [
 
       return updated
         ? HttpResponse.json(updated)
-        : apiError(404, 'NotFoundException', 'Webhook not found.');
+        : apiError(404, 'NotFoundException', i18n.t('mockApi.webhookNotFound'));
     }),
   ),
 ];

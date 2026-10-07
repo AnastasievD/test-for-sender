@@ -1,4 +1,5 @@
 import { ApiError } from './errors';
+import { i18n } from '../i18n';
 
 let csrfToken: string | null = null;
 let csrfPromise: Promise<string> | null = null;
@@ -14,7 +15,7 @@ const requestCsrfToken = async () => {
   }
 
   const token = response.headers.get('X-CSRF-TOKEN');
-  if (!token) throw new Error('CSRF response did not include X-CSRF-TOKEN.');
+  if (!token) throw new Error(i18n.t('errors.csrfHeaderMissing'));
   csrfToken = token;
   return token;
 };

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { i18n } from '../i18n';
 
 export const apiErrorTypeSchema = z.enum([
   'BadRequestException',
@@ -26,7 +27,7 @@ export class ApiError extends Error {
   constructor(status: number, body: unknown) {
     const parsed = apiErrorBodySchema.safeParse(body);
     const apiError = parsed.success ? parsed.data.error : undefined;
-    super(apiError?.message ?? `Request failed with status ${status}`);
+    super(apiError?.message ?? i18n.t('errors.requestFailed', { status }));
     this.name = 'ApiError';
     this.status = status;
     this.type = apiError?.type;

@@ -16,6 +16,7 @@ import {
 import { useDebouncedValue } from '@mantine/hooks';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { IconLogout, IconSearch, IconWebhook } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../auth/AuthContext';
 import { ErrorState } from '../../shared/ui/ErrorState';
 import { getWebhooks } from './api';
@@ -25,6 +26,7 @@ import { useWebhookSearchParams } from './hooks/useWebhookSearchParams';
 import type { Webhook } from './schema';
 
 export const WebhooksPage = () => {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const { page, search, setPage, setSearch } = useWebhookSearchParams();
   const [searchInput, setSearchInput] = useState(search);
@@ -57,7 +59,7 @@ export const WebhooksPage = () => {
             <div className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-800 text-white shadow-[0_0.45rem_1.1rem_rgba(28,126,214,0.22)]">
               <IconWebhook size={21} stroke={1.8} />
             </div>
-            <Text fw={750} size="lg">Smart Sender</Text>
+            <Text fw={750} size="lg">{t('common.appName')}</Text>
           </Group>
           <Group gap="sm">
             <Box className="hidden sm:block">
@@ -65,12 +67,12 @@ export const WebhooksPage = () => {
               <Text size="xs" c="dimmed">{user?.email}</Text>
             </Box>
             <Avatar color="blue" radius="xl">{initials}</Avatar>
-            <Tooltip label="Sign out">
+            <Tooltip label={t('actions.signOut')}>
               <ActionIcon
                 variant="subtle"
                 color="gray"
                 size="lg"
-                aria-label="Sign out"
+                aria-label={t('actions.signOut')}
                 onClick={() => void logout()}
               >
                 <IconLogout size={19} />
@@ -89,13 +91,13 @@ export const WebhooksPage = () => {
           <Group justify="space-between" align="flex-end" className="max-sm:items-start">
             <div>
               <Text className="text-xs font-bold tracking-[0.16em]" c="blue.7">
-                DELIVERY CONFIGURATION
+                {t('webhooks.eyebrow')}
               </Text>
               <Title order={1} className="mt-1 text-[clamp(2rem,4vw,3rem)] tracking-[-0.04em]">
-                Webhooks
+                {t('webhooks.title')}
               </Title>
               <Text c="dimmed" mt={6}>
-                Monitor and maintain the endpoints connected to your workspace.
+                {t('webhooks.description')}
               </Text>
             </div>
             <Button
@@ -104,7 +106,9 @@ export const WebhooksPage = () => {
               leftSection={<IconWebhook size={17} />}
               disabled
             >
-              {webhooksQuery.data?.paging.results.total ?? '—'} endpoints
+              {t('webhooks.endpointCount', {
+                count: webhooksQuery.data?.paging.results.total ?? 0,
+              })}
             </Button>
           </Group>
 
@@ -114,8 +118,8 @@ export const WebhooksPage = () => {
             value={searchInput}
             onChange={(event) => setSearchInput(event.currentTarget.value)}
             leftSection={<IconSearch size={18} />}
-            placeholder="Search webhooks by name"
-            aria-label="Search webhooks by name"
+            placeholder={t('webhooks.searchPlaceholder')}
+            aria-label={t('webhooks.searchPlaceholder')}
           />
 
           {webhooksQuery.isError ? (
@@ -132,7 +136,9 @@ export const WebhooksPage = () => {
             (webhooksQuery.data?.paging.pages.last ?? 1) > 1 && (
               <Group justify="space-between" className="max-sm:justify-center">
                 <Text className="max-sm:hidden" size="sm" c="dimmed">
-                  {webhooksQuery.data?.paging.results.total ?? 0} results
+                  {t('webhooks.resultCount', {
+                    count: webhooksQuery.data?.paging.results.total ?? 0,
+                  })}
                 </Text>
                 <Pagination
                   value={page}

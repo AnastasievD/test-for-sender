@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { i18n } from '../../i18n';
 
 const isHttpUrl = (value: string) => {
   try {
@@ -10,11 +11,11 @@ const isHttpUrl = (value: string) => {
 };
 
 export const webhookUpdateSchema = z.object({
-  name: z.string().trim().min(1, 'Name is required'),
+  name: z.string().trim().min(1, i18n.t('validation.nameRequired')),
   url: z
     .string()
     .trim()
-    .refine(isHttpUrl, 'Enter a valid HTTP/HTTPS URL'),
+    .refine(isHttpUrl, i18n.t('validation.httpUrl')),
 });
 
 export const webhookSchema = webhookUpdateSchema.extend({

@@ -32,6 +32,7 @@ The login form is prefilled with these values for easier review.
 
 - A small feature-based structure keeps application setup, transport concerns, mocks and product features separate without introducing monorepo or full FSD overhead.
 - Zod schemas are the single source of truth for form inputs and API models. Types are inferred from schemas instead of being declared twice.
+- All interface copy, accessibility labels, validation messages, notifications and mock API errors live in a typed i18next English resource; components contain translation keys instead of user-facing literals.
 - The native `fetch` wrapper owns CSRF initialization, mandatory headers, runtime response validation, typed API errors and bounded retries. UI components do not implement transport policy.
 - MSW treats request JSON as unknown and validates it with the same input schemas before executing an operation.
 - The device session token only exists as a local variable between login and session issue. It is never persisted or placed in the URL.
