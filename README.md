@@ -15,6 +15,7 @@ Open the URL printed by Vite. Other useful commands:
 
 ```bash
 npm test
+npm run test:e2e
 npm run build
 ```
 
@@ -41,7 +42,13 @@ The login form is prefilled with these values for easier review.
 
 ## Test coverage
 
-The required integration test starts two protected requests against an expired session and verifies that both succeed after exactly one `/auth/token/rotate` call.
+The Vitest integration test starts two protected requests against an expired session and verifies that both receive `401`, recover successfully and share exactly one `/auth/token/rotate` call.
+
+The Playwright E2E test covers the primary browser journey: sign-in, URL-backed search, Zod validation, webhook editing and sign-out. Install its Chromium runtime once with:
+
+```bash
+npx playwright install chromium
+```
 
 ## Known limitations
 
