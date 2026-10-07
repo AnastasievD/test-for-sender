@@ -13,7 +13,7 @@ import {
 import { useForm } from '@mantine/form';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { isApiError } from '../../api/errors';
-import { TEST_CREDENTIALS } from '../../mocks/database';
+import { TEST_CREDENTIALS } from '../../shared/config/constants';
 import { useAuth } from './AuthContext';
 
 interface LocationState {

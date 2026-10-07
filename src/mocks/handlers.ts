@@ -4,9 +4,9 @@ import {
   findWebhook,
   listWebhooks,
   mockUser,
-  TEST_CREDENTIALS,
   updateWebhook,
 } from './database';
+import { TEST_CREDENTIALS } from '../shared/config/constants';
 import {
   CSRF_TOKEN,
   DEVICE_SESSION_TOKEN,

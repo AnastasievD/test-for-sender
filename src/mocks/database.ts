@@ -1,9 +1,5 @@
 import type { Webhook, WebhookList, WebhookUpdate } from '../features/webhooks/types';
-
-export const TEST_CREDENTIALS = {
-  email: 'senior@smartsender.test',
-  password: 'SmartSender123!',
-} as const;
+import { TEST_CREDENTIALS } from '../shared/config/constants';
 
 export const mockUser = {
   id: 1,
