@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Badge,
   Box,
   Paper,
@@ -8,13 +9,15 @@ import {
   Text,
   ThemeIcon,
   Title,
+  Tooltip,
 } from '@mantine/core';
-import { IconWebhook } from '@tabler/icons-react';
+import { IconEdit, IconWebhook } from '@tabler/icons-react';
 import type { Webhook } from '../types';
 
 interface WebhooksTableProps {
   webhooks: Webhook[];
   loading: boolean;
+  onEdit: (webhook: Webhook) => void;
 }
 
 const LoadingRows = () =>
@@ -23,10 +26,11 @@ const LoadingRows = () =>
       <Table.Td><Skeleton height={18} width={`${55 + index * 4}%`} /></Table.Td>
       <Table.Td className="url-column"><Skeleton height={18} width="82%" /></Table.Td>
       <Table.Td><Skeleton height={24} width={68} radius="xl" /></Table.Td>
+      <Table.Td><Skeleton height={28} width={28} radius="md" /></Table.Td>
     </Table.Tr>
   ));
 
-export const WebhooksTable = ({ webhooks, loading }: WebhooksTableProps) => {
+export const WebhooksTable = ({ webhooks, loading, onEdit }: WebhooksTableProps) => {
   if (!loading && webhooks.length === 0) {
     return (
       <Paper className="state-card" withBorder radius="lg">
@@ -52,6 +56,7 @@ export const WebhooksTable = ({ webhooks, loading }: WebhooksTableProps) => {
               <Table.Th>Name</Table.Th>
               <Table.Th className="url-column">Endpoint URL</Table.Th>
               <Table.Th>Status</Table.Th>
+              <Table.Th aria-label="Actions" />
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -77,6 +82,18 @@ export const WebhooksTable = ({ webhooks, loading }: WebhooksTableProps) => {
                     >
                       {webhook.active ? 'Active' : 'Inactive'}
                     </Badge>
+                  </Table.Td>
+                  <Table.Td>
+                    <Tooltip label={`Edit ${webhook.name}`}>
+                      <ActionIcon
+                        variant="subtle"
+                        color="gray"
+                        aria-label={`Edit ${webhook.name}`}
+                        onClick={() => onEdit(webhook)}
+                      >
+                        <IconEdit size={17} />
+                      </ActionIcon>
+                    </Tooltip>
                   </Table.Td>
                 </Table.Tr>
               ))

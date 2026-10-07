@@ -19,13 +19,16 @@ import { IconLogout, IconSearch, IconWebhook } from '@tabler/icons-react';
 import { useAuth } from '../auth/AuthContext';
 import { ErrorState } from '../../shared/ui/ErrorState';
 import { getWebhooks } from './api';
+import { WebhookEditModal } from './components/WebhookEditModal';
 import { WebhooksTable } from './components/WebhooksTable';
 import { useWebhookSearchParams } from './hooks/useWebhookSearchParams';
+import type { Webhook } from './types';
 
 export const WebhooksPage = () => {
   const { user, logout } = useAuth();
   const { page, search, setPage, setSearch } = useWebhookSearchParams();
   const [searchInput, setSearchInput] = useState(search);
+  const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(null);
   const [debouncedSearch] = useDebouncedValue(searchInput, 300);
 
   useEffect(() => {
@@ -106,6 +109,7 @@ export const WebhooksPage = () => {
             <WebhooksTable
               webhooks={webhooksQuery.data?.data ?? []}
               loading={webhooksQuery.isPending}
+              onEdit={setSelectedWebhook}
             />
           )}
 
@@ -125,6 +129,10 @@ export const WebhooksPage = () => {
             )}
         </Stack>
       </Container>
+      <WebhookEditModal
+        webhook={selectedWebhook}
+        onClose={() => setSelectedWebhook(null)}
+      />
     </Box>
   );
 };
